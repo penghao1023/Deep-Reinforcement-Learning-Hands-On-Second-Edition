@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import argparse
 import gym
-import roboschool
 
 from lib import model, kfac
 from PIL import Image
@@ -10,7 +9,7 @@ import numpy as np
 import torch
 
 
-ENV_ID = "RoboschoolHalfCheetah-v1"
+ENV_ID = "Pendulum-v0"
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -38,6 +37,7 @@ if __name__ == "__main__":
         mu_v = net(obs_v)
         action = mu_v.squeeze(dim=0).data.numpy()
         action = np.clip(action, -1, 1)
+        if np.isscalar(action): action = [action]
         obs, reward, done, _ = env.step(action)
         total_reward += reward
         total_steps += 1

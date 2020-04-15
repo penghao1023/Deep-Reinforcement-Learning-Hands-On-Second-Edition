@@ -4,7 +4,6 @@ import math
 import ptan
 import time
 import gym
-import roboschool
 import argparse
 from tensorboardX import SummaryWriter
 
@@ -16,7 +15,7 @@ import torch.optim as optim
 import torch.nn.functional as F
 
 
-ENV_ID = "RoboschoolHalfCheetah-v1"
+ENV_ID = "Pendulum-v0"
 GAMMA = 0.99
 GAE_LAMBDA = 0.95
 
@@ -41,6 +40,7 @@ def test_net(net, env, count=10, device="cpu"):
             mu_v = net(obs_v)[0]
             action = mu_v.squeeze(dim=0).data.cpu().numpy()
             action = np.clip(action, -1, 1)
+            if np.isscalar(action): action = [action]
             obs, reward, done, _ = env.step(action)
             rewards += reward
             steps += 1
