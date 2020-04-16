@@ -14,6 +14,10 @@ import torch
 import torch.optim as optim
 import torch.nn.functional as F
 
+try:
+    import gym_copter
+except:
+    pass
 
 ENV_ID = "Pendulum-v0"
 GAMMA = 0.99

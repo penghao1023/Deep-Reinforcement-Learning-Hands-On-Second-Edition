@@ -14,6 +14,11 @@ import torch
 import torch.optim as optim
 import torch.nn.functional as F
 
+try:
+    import gym_copter
+except:
+    pass
+
 
 ENV_ID = "Pendulum-v0"
 GAMMA = 0.99
@@ -111,8 +116,11 @@ if __name__ == "__main__":
 
     trajectory = []
     best_reward = None
+
     with ptan.common.utils.RewardTracker(writer) as tracker:
+
         for step_idx, exp in enumerate(exp_source):
+
             rewards_steps = exp_source.pop_rewards_steps()
             if rewards_steps:
                 rewards, steps = zip(*rewards_steps)
