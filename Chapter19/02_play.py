@@ -17,6 +17,7 @@ if __name__ == "__main__":
     parser.add_argument("-e", "--env", default=ENV_ID, help="Environment name to use, default=" + ENV_ID)
     parser.add_argument("-r", "--record", help="If specified, sets the recording dir, default=Disabled")
     parser.add_argument("-s", "--save", type=int, help="If specified, save every N-th step as an image")
+    parser.add_argument("--render", default=False, action='store_true', help="Render")
     parser.add_argument("--acktr", default=False, action='store_true', help="Enable Acktr-specific tweaks")
     args = parser.parse_args()
 
@@ -39,6 +40,8 @@ if __name__ == "__main__":
         action = np.clip(action, -1, 1)
         if np.isscalar(action): action = [action]
         obs, reward, done, _ = env.step(action)
+        if args.render: 
+            env.render()
         total_reward += reward
         total_steps += 1
         if done:
