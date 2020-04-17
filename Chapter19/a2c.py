@@ -14,11 +14,6 @@ import torch
 import torch.optim as optim
 import torch.nn.functional as F
 
-try:
-    import gym_copter
-except:
-    pass
-
 ENV_ID = "Pendulum-v0"
 GAMMA = 0.99
 REWARD_STEPS = 5
@@ -56,19 +51,22 @@ def calc_logprob(mu_v, logstd_v, actions_v):
     return p1 + p2
 
 
-if __name__ == "__main__":
+def parse_args():
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--cuda", default=False, action='store_true', help='Enable CUDA')
     parser.add_argument("-n", "--name", required=True, help="Name of the run")
     parser.add_argument("-e", "--env", default=ENV_ID, help="Environment id, default=" + ENV_ID)
-    args = parser.parse_args()
+    return parser.parse_args()
+
+def train(test_env, args):
+
     device = torch.device("cuda" if args.cuda else "cpu")
 
     save_path = os.path.join("saves", "a2c-" + args.name)
     os.makedirs(save_path, exist_ok=True)
 
     envs = [gym.make(args.env) for _ in range(ENVS_COUNT)]
-    test_env = gym.make(args.env)
 
     net_act = model.ModelActor(envs[0].observation_space.shape[0], envs[0].action_space.shape[0]).to(device)
     net_crt = model.ModelCritic(envs[0].observation_space.shape[0]).to(device)
