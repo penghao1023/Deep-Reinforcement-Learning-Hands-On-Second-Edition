@@ -3,3 +3,6 @@
 runs
 __pycache__
 *.dat
+build/
+dist/
+drlho2e_ch19.egg-info/

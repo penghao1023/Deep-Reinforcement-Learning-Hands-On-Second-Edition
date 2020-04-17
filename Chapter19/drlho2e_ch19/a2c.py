@@ -7,7 +7,7 @@ import gym
 import argparse
 from tensorboardX import SummaryWriter
 
-from lib import model, common
+from drlho2e_ch19.lib import model, common
 
 import numpy as np
 import torch
@@ -25,7 +25,7 @@ ENVS_COUNT = 16
 
 TEST_ITERS = 100000
 
-def test_net(net, env, count=10, device="cpu"):
+def _test_net(net, env, count=10, device="cpu"):
     rewards = 0.0
     steps = 0
     for _ in range(count):
@@ -44,7 +44,7 @@ def test_net(net, env, count=10, device="cpu"):
     return rewards / count, steps / count
 
 
-def calc_logprob(mu_v, logstd_v, actions_v):
+def _calc_logprob(mu_v, logstd_v, actions_v):
     p1 = - ((mu_v - actions_v) ** 2) / (2*torch.exp(logstd_v).clamp(min=1e-3))
     p2 = - torch.log(torch.sqrt(2 * math.pi * torch.exp(logstd_v)))
     return p1 + p2
@@ -92,7 +92,7 @@ def train(test_env, args):
 
                 if step_idx % TEST_ITERS == 0:
                     ts = time.time()
-                    rewards, steps = test_net(net_act, test_env, device=device)
+                    rewards, steps = _test_net(net_act, test_env, device=device)
                     print("Test done in %.2f sec, reward %.3f, steps %d" % (
                         time.time() - ts, rewards, steps))
                     writer.add_scalar("test_reward", rewards, step_idx)
@@ -122,7 +122,7 @@ def train(test_env, args):
                 opt_act.zero_grad()
                 mu_v = net_act(states_v)
                 adv_v = vals_ref_v.unsqueeze(dim=-1) - value_v.detach()
-                log_prob_v = adv_v * calc_logprob(mu_v, net_act.logstd, actions_v)
+                log_prob_v = adv_v * _calc_logprob(mu_v, net_act.logstd, actions_v)
                 loss_policy_v = -log_prob_v.mean()
                 entropy_loss_v = ENTROPY_BETA * (-(torch.log(2*math.pi*torch.exp(net_act.logstd)) + 1)/2).mean()
                 loss_v = loss_policy_v + entropy_loss_v
