@@ -25,7 +25,6 @@ ENVS_COUNT = 16
 
 TEST_ITERS = 100000
 
-
 def test_net(net, env, count=10, device="cpu"):
     rewards = 0.0
     steps = 0
@@ -137,4 +136,10 @@ def train(test_env, args):
                 tb_tracker.track("loss_policy", loss_policy_v, step_idx)
                 tb_tracker.track("loss_value", loss_value_v, step_idx)
                 tb_tracker.track("loss_total", loss_v, step_idx)
+
+if __name__ == '__main__':
+
+    args = parse_args()
+    test_env = gym.make(args.env)
+    train(test_env, args)
 
