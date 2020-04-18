@@ -2,17 +2,11 @@
 import argparse
 import gym
 
-from lib import model, kfac
+from drlho2e_ch19.lib import model, kfac
 from PIL import Image
 
 import numpy as np
 import torch
-
-try:
-    import gym_copter
-except:
-    pass
-
 
 ENV_ID = "Pendulum-v0"
 
