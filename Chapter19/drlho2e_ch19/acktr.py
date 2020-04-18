@@ -7,7 +7,7 @@ import gym
 import argparse
 from tensorboardX import SummaryWriter
 
-from lib import model, common, kfac
+from drlho2e_ch19.lib import model, common, kfac
 
 import numpy as np
 import torch
@@ -52,12 +52,16 @@ def calc_logprob(mu_v, logstd_v, actions_v):
     return p1 + p2
 
 
-if __name__ == "__main__":
+def parse_args():
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--cuda", default=False, action='store_true', help='Enable CUDA')
     parser.add_argument("-n", "--name", required=True, help="Name of the run")
     parser.add_argument("-e", "--env", default=ENV_ID, help="Environment id, default=" + ENV_ID)
-    args = parser.parse_args()
+    return parser.parse_args()
+
+def train(test_env, args):
+
     device = torch.device("cuda" if args.cuda else "cpu")
 
     save_path = os.path.join("saves", "acktr-" + args.name)
@@ -142,3 +146,8 @@ if __name__ == "__main__":
                 tb_tracker.track("loss_policy", loss_policy_v, step_idx)
                 tb_tracker.track("loss_value", loss_value_v, step_idx)
                 tb_tracker.track("loss_total", loss_v, step_idx)
+
+if __name__ == '__main__':
+    args = parse_args()
+    test_env = gym.make(args.env)
+    train(test_env, args)
