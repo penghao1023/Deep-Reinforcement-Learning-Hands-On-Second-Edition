@@ -138,8 +138,6 @@ def train(test_env, args):
                 tb_tracker.track("loss_total", loss_v, step_idx)
 
 if __name__ == '__main__':
-
     args = parse_args()
     test_env = gym.make(args.env)
     train(test_env, args)
-

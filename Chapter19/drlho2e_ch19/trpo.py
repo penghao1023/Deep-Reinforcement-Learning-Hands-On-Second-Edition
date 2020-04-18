@@ -7,18 +7,12 @@ import gym
 import argparse
 from tensorboardX import SummaryWriter
 
-from lib import model, trpo
+from drlho2e_ch19.lib import model, trpo
 
 import numpy as np
 import torch
 import torch.optim as optim
 import torch.nn.functional as F
-
-try:
-    import gym_copter
-except:
-    pass
-
 
 ENV_ID = "Pendulum-v0"
 GAMMA = 0.99
@@ -33,7 +27,7 @@ TRPO_DAMPING = 0.1
 TEST_ITERS = 100000
 
 
-def test_net(net, env, count=10, device="cpu"):
+def _test_net(net, env, count=10, device="cpu"):
     rewards = 0.0
     steps = 0
     for _ in range(count):
@@ -52,7 +46,7 @@ def test_net(net, env, count=10, device="cpu"):
     return rewards / count, steps / count
 
 
-def calc_logprob(mu_v, logstd_v, actions_v):
+def _calc_logprob(mu_v, logstd_v, actions_v):
     p1 = - ((mu_v - actions_v) ** 2) / (2*torch.exp(logstd_v).clamp(min=1e-3))
     p2 = - torch.log(torch.sqrt(2 * math.pi * torch.exp(logstd_v)))
     return p1 + p2
@@ -87,14 +81,18 @@ def calc_adv_ref(trajectory, net_crt, states_v, device="cpu"):
     return adv_v, ref_v
 
 
-if __name__ == "__main__":
+def parse_args():
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--cuda", default=False, action='store_true', help='Enable CUDA')
     parser.add_argument("-n", "--name", required=True, help="Name of the run")
     parser.add_argument("-e", "--env", default=ENV_ID, help="Environment id, default=" + ENV_ID)
     parser.add_argument("--lr", default=LEARNING_RATE_CRITIC, type=float, help="Critic learning rate")
     parser.add_argument("--maxkl", default=TRPO_MAX_KL, type=float, help="Maximum KL divergence")
-    args = parser.parse_args()
+    return parser.parse_args()
+
+def train(test_env, args):
+
     device = torch.device("cuda" if args.cuda else "cpu")
 
     save_path = os.path.join("saves", "trpo-" + args.name)
@@ -129,7 +127,7 @@ if __name__ == "__main__":
 
             if step_idx % TEST_ITERS == 0:
                 ts = time.time()
-                rewards, steps = test_net(net_act, test_env, device=device)
+                rewards, steps = _test_net(net_act, test_env, device=device)
                 print("Test done in %.2f sec, reward %.3f, steps %d" % (
                     time.time() - ts, rewards, steps))
                 writer.add_scalar("test_reward", rewards, step_idx)
@@ -152,7 +150,7 @@ if __name__ == "__main__":
             traj_actions_v = torch.FloatTensor(traj_actions).to(device)
             traj_adv_v, traj_ref_v = calc_adv_ref(trajectory, net_crt, traj_states_v, device=device)
             mu_v = net_act(traj_states_v)
-            old_logprob_v = calc_logprob(mu_v, net_act.logstd, traj_actions_v)
+            old_logprob_v = _calc_logprob(mu_v, net_act.logstd, traj_actions_v)
 
             # normalize advantages
             traj_adv_v = (traj_adv_v - torch.mean(traj_adv_v)) / torch.std(traj_adv_v)
@@ -177,7 +175,7 @@ if __name__ == "__main__":
             # actor step
             def get_loss():
                 mu_v = net_act(traj_states_v)
-                logprob_v = calc_logprob(
+                logprob_v = _calc_logprob(
                     mu_v, net_act.logstd, traj_actions_v)
                 dp_v = torch.exp(logprob_v - old_logprob_v)
                 action_loss_v = -traj_adv_v.unsqueeze(dim=-1)*dp_v
@@ -203,3 +201,7 @@ if __name__ == "__main__":
             writer.add_scalar("values", traj_ref_v.mean().item(), step_idx)
             writer.add_scalar("loss_value", loss_value_v.item(), step_idx)
 
+if __name__ == '__main__':
+    args = parse_args()
+    test_env = gym.make(args.env)
+    train(test_env, args)

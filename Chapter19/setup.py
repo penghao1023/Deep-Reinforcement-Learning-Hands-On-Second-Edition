@@ -8,7 +8,7 @@ Copyright (C) 2019 Simon D. Levy
 MIT License
 '''
 
-from distutils.core import setup
+from setuptools import setup
 
 setup (name = 'drlho2e_ch19',
     version = '0.1',
