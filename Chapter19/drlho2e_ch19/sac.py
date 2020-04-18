@@ -8,13 +8,12 @@ import argparse
 from tensorboardX import SummaryWriter
 import numpy as np
 
-from lib import model, common
+from drlho2e_ch19.lib import model, common
 
 import torch
 import torch.optim as optim
 import torch.distributions as distrib
 import torch.nn.functional as F
-
 
 ENV_ID = "Pendulum-v0"
 GAMMA = 0.99
@@ -47,12 +46,16 @@ def test_net(net, env, count=10, device="cpu"):
     return rewards / count, steps / count
 
 
-if __name__ == "__main__":
+def parse_args():
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--cuda", default=False, action='store_true', help='Enable CUDA')
     parser.add_argument("-n", "--name", required=True, help="Name of the run")
     parser.add_argument("-e", "--env", default=ENV_ID, help="Environment id, default=" + ENV_ID)
-    args = parser.parse_args()
+    return parser.parse_args()
+
+def train(test_env, args):
+
     device = torch.device("cuda" if args.cuda else "cpu")
 
     save_path = os.path.join("saves", "sac-" + args.name)
@@ -162,3 +165,8 @@ if __name__ == "__main__":
                         best_reward = rewards
 
     pass
+
+if __name__ == '__main__':
+    args = parse_args()
+    test_env = gym.make(args.env)
+    train(test_env, args)
