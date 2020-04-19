@@ -10,11 +10,11 @@ MIT License
 
 from setuptools import setup
 
-setup (name = 'drlho2e_ch19',
+setup (name = 'drlho2e',
     version = '0.1',
     install_requires = ['gym', 'numpy'],
-    description = 'Chapter 19 code',
-    packages = ['drlho2e_ch19', 'drlho2e_ch19.lib'],
+    description = 'Deep-Reinforcement-Learning-Hands-On-Second-Edition',
+    packages = ['drlho2e', 'drlho2e.ch19', 'drlho2e.ch19.lib'],
     author='Simon D. Levy',
     author_email='simon.d.levy@gmail.com',
     url='https://github.com/simondlevy/Deep-Reinforcement-Learning-Hands-On-Second-Edition',

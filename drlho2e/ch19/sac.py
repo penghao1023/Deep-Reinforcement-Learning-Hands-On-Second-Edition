@@ -8,7 +8,7 @@ import argparse
 from tensorboardX import SummaryWriter
 import numpy as np
 
-from drlho2e_ch19.lib import model, common
+from drlho2e.ch19.lib import model, common
 
 import torch
 import torch.optim as optim

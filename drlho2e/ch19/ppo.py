@@ -7,7 +7,7 @@ import gym
 import argparse
 from tensorboardX import SummaryWriter
 
-from drlho2e_ch19.lib import model
+from drlho2e.ch19.lib import model
 
 import numpy as np
 import torch
