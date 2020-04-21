@@ -9,4 +9,9 @@ Modified by Simon D. Levy:
 
 3. Support one-dimensional action space.
 
-# Quickstart:
+## Quickstart:
+
+```
+cd drlho2e/ch19
+python3 trpo.py -e Pendulum-v0 -n pendulum
+```
