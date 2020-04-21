@@ -7,7 +7,7 @@ import gym
 import argparse
 from tensorboardX import SummaryWriter
 
-from drlho2e.ch19.lib import model, trpo
+from drlho2e.ch19.lib import model, trpo, test_net, calc_logprob
 
 import numpy as np
 import torch
@@ -24,33 +24,6 @@ TRPO_MAX_KL = 0.01
 TRPO_DAMPING = 0.1
 
 TEST_ITERS = 100000
-
-
-def _test_net(net, env, count=10, device="cpu"):
-    rewards = 0.0
-    steps = 0
-    for _ in range(count):
-        obs = env.reset()
-        while True:
-            obs_v = ptan.agent.float32_preprocessor([obs]).to(device)
-            mu_v = net(obs_v)[0]
-            action = mu_v.squeeze(dim=0).data.cpu().numpy()
-            action = np.clip(action, -1, 1)
-            if np.isscalar(action): action = [action]
-            obs, reward, done, _ = env.step(action)
-            #print(steps,reward)
-            rewards += reward
-            steps += 1
-            if done:
-                break
-    return rewards / count, steps / count
-
-
-def _calc_logprob(mu_v, logstd_v, actions_v):
-    p1 = - ((mu_v - actions_v) ** 2) / (2*torch.exp(logstd_v).clamp(min=1e-3))
-    p2 = - torch.log(torch.sqrt(2 * math.pi * torch.exp(logstd_v)))
-    return p1 + p2
-
 
 def calc_adv_ref(trajectory, net_crt, states_v, device="cpu"):
     """
@@ -128,7 +101,7 @@ def train(test_env, args):
 
             if step_idx % TEST_ITERS == 0:
                 ts = time.time()
-                rewards, steps = _test_net(net_act, test_env, device=device)
+                rewards, steps = test_net(net_act, test_env, device=device)
                 print("Test done in %.2f sec, reward %.3f, steps %d" % (
                     time.time() - ts, rewards, steps))
                 writer.add_scalar("test_reward", rewards, step_idx)
