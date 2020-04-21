@@ -127,7 +127,7 @@ def train(test_env, args):
             traj_adv_v, traj_ref_v = calc_adv_ref(
                 trajectory, net_crt, traj_states_v, device=device)
             mu_v = net_act(traj_states_v)
-            old_logprob_v = _calc_logprob(
+            old_logprob_v = calc_logprob(
                 mu_v, net_act.logstd, traj_actions_v)
 
             # normalize advantages
@@ -165,7 +165,7 @@ def train(test_env, args):
                     # actor training
                     opt_act.zero_grad()
                     mu_v = net_act(states_v)
-                    logprob_pi_v = _calc_logprob(
+                    logprob_pi_v = calc_logprob(
                         mu_v, net_act.logstd, actions_v)
                     ratio_v = torch.exp(
                         logprob_pi_v - batch_old_logprob_v)

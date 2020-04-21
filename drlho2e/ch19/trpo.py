@@ -124,7 +124,7 @@ def train(test_env, args):
             traj_actions_v = torch.FloatTensor(traj_actions).to(device)
             traj_adv_v, traj_ref_v = calc_adv_ref(trajectory, net_crt, traj_states_v, device=device)
             mu_v = net_act(traj_states_v)
-            old_logprob_v = _calc_logprob(mu_v, net_act.logstd, traj_actions_v)
+            old_logprob_v = calc_logprob(mu_v, net_act.logstd, traj_actions_v)
 
             # normalize advantages
             traj_adv_v = (traj_adv_v - torch.mean(traj_adv_v)) / torch.std(traj_adv_v)
@@ -149,7 +149,7 @@ def train(test_env, args):
             # actor step
             def get_loss():
                 mu_v = net_act(traj_states_v)
-                logprob_v = _calc_logprob(
+                logprob_v = calc_logprob(
                     mu_v, net_act.logstd, traj_actions_v)
                 dp_v = torch.exp(logprob_v - old_logprob_v)
                 action_loss_v = -traj_adv_v.unsqueeze(dim=-1)*dp_v

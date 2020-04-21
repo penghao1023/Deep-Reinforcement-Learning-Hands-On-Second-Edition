@@ -17,7 +17,7 @@ Modified by Simon D. Levy:
 ```
 
 After a hundred thousand iterations or so, the program should should report
-saving the current best agent to a file. After a few hundred thousand iterations, the
+saving the current best agent to a file. After a few million iterations, the
 best agent should be good enough to test, which you can do as follows:
 
 ```
