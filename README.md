@@ -3,7 +3,7 @@ Deep-Reinforcement-Learning-Hands-On-Second-Edition, published by Packt
 
 Modified by Simon D. Levy:
 
-1. Made a proper Python package
+1. Made a proper Python package (currently Chapter 19 only)
 
 2. Removed RoboSchool dependency.
 
