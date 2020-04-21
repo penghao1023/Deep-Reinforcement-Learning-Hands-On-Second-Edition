@@ -9,7 +9,7 @@ Modified by Simon D. Levy:
 
 3. Support one-dimensional action space.
 
-## Quickstart:
+## Quickstart: (% is your command-line prompt)
 
 ```
 % cd drlho2e/ch19
