@@ -24,7 +24,7 @@ best agent should be good enough to test, which you can do as follows:
 % python3 play.py --render -e Pendulum-v0 -m saves/trpo-pendulum/best_-<REWARD>_<ITER>.dat
 ```
 
-where <REWARD> is the amount of reward and <ITER> is the number of iterations
+where ```<REWARD>``` is the amount of reward and ```<ITER>``` is the number of iterations
 at which it was saved. (It is easiest to do this through tab completion.) You
 should see brief animation of the pendulum rising to an upright position, indicating success.
 
