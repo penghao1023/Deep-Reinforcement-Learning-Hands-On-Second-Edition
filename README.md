@@ -12,6 +12,6 @@ Modified by Simon D. Levy:
 ## Quickstart:
 
 ```
-cd drlho2e/ch19
-python3 trpo.py -e Pendulum-v0 -n pendulum
+% cd drlho2e/ch19
+% python3 trpo.py -e Pendulum-v0 -n pendulum
 ```
