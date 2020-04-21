@@ -43,4 +43,5 @@ On Linux and OS X, you'll likely have to do this with <tt>sudo</tt>:
 % sudo python3 setup.py install
 ```
 
-
+Here are some [examples](https://github.com/simondlevy/gym-copter/tree/master/learning) of simple 
+programs I wrote using this package with my own Gym envrionment.
