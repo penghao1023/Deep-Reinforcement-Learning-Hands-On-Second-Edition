@@ -2,6 +2,15 @@ import torch
 import ptan
 import math
 import numpy as np
+import argparse
+
+def build_parser():
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--cuda", default=False, action='store_true', help='Enable CUDA')
+    parser.add_argument("-n", "--name", required=True, help="Name of the run")
+    parser.add_argument("-e", "--env", required=True, help="Environment id")
+    return parser
 
 def calc_logprob(mu_v, logstd_v, actions_v):
     p1 = - ((mu_v - actions_v) ** 2) / (2*torch.exp(logstd_v).clamp(min=1e-3))

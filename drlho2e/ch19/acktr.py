@@ -7,7 +7,7 @@ import gym
 import argparse
 from tensorboardX import SummaryWriter
 
-from drlho2e.ch19.lib import model, common, kfac, test_net
+from drlho2e.ch19.lib import model, common, kfac, test_net, build_parser
 
 import numpy as np
 import torch
@@ -27,10 +27,7 @@ TEST_ITERS = 100000
 
 def parse_args():
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--cuda", default=False, action='store_true', help='Enable CUDA')
-    parser.add_argument("-n", "--name", required=True, help="Name of the run")
-    parser.add_argument("-e", "--env", required=True, help="Environment id")
+    parser = build_parser()
     return parser.parse_args()
 
 def train(test_env, args):

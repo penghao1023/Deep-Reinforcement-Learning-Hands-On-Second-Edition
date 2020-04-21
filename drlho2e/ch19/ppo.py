@@ -7,7 +7,7 @@ import gym
 import argparse
 from tensorboardX import SummaryWriter
 
-from drlho2e.ch19.lib import model, test_net, calc_logprob
+from drlho2e.ch19.lib import model, test_net, calc_logprob, build_parser
 
 import numpy as np
 import torch
@@ -59,12 +59,11 @@ def calc_adv_ref(trajectory, net_crt, states_v, device="cpu"):
 
 def parse_args():
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--cuda", default=False, action='store_true', help='Enable CUDA')
-    parser.add_argument("-n", "--name", required=True, help="Name of the run")
-    parser.add_argument("-e", "--env", required=True, help="Environment id")
+    parser = build_parser()
+
     parser.add_argument("--lrc", default=LEARNING_RATE_CRITIC, type=float, help="Critic learning rate")
     parser.add_argument("--lra", default=LEARNING_RATE_ACTOR, type=float, help="Actor learning rate")
+
     return parser.parse_args()
 
 def train(test_env, args):

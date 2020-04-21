@@ -8,7 +8,7 @@ import argparse
 from tensorboardX import SummaryWriter
 import numpy as np
 
-from drlho2e.ch19.lib import model, common
+from drlho2e.ch19.lib import model, common, build_parser
 from lib import test_net
 
 import torch
@@ -29,10 +29,7 @@ TEST_ITERS = 10000
 
 def parse_args():
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--cuda", default=False, action='store_true', help='Enable CUDA')
-    parser.add_argument("-n", "--name", required=True, help="Name of the run")
-    parser.add_argument("-e", "--env", required=True, help="Environment id")
+    parser = build_parser()
     return parser.parse_args()
 
 def train(test_env, args):
