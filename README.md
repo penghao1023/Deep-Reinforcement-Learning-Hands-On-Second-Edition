@@ -37,7 +37,7 @@ you'll want to install this repository as a Python package.  Back in the top-lev
 % python3 setup.py install
 ```
 
-On Linux and OS X, you'll like have to do this with <tt>sudo</tt>:
+On Linux and OS X, you'll likely have to do this with <tt>sudo</tt>:
 
 ```
 % sudo python3 setup.py install
