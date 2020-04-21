@@ -14,7 +14,6 @@ import torch
 import torch.optim as optim
 import torch.nn.functional as F
 
-ENV_ID = "Pendulum-v0"
 GAMMA = 0.99
 REWARD_STEPS = 5
 BATCH_SIZE = 32
@@ -55,7 +54,7 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--cuda", default=False, action='store_true', help='Enable CUDA')
     parser.add_argument("-n", "--name", required=True, help="Name of the run")
-    parser.add_argument("-e", "--env", default=ENV_ID, help="Environment id, default=" + ENV_ID)
+    parser.add_argument("-e", "--env", required=True, help="Name of environment")
     return parser.parse_args()
 
 def train(test_env, args):

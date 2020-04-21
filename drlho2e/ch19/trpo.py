@@ -14,7 +14,6 @@ import torch
 import torch.optim as optim
 import torch.nn.functional as F
 
-ENV_ID = "Pendulum-v0"
 GAMMA = 0.99
 GAE_LAMBDA = 0.95
 
@@ -39,6 +38,7 @@ def _test_net(net, env, count=10, device="cpu"):
             action = np.clip(action, -1, 1)
             if np.isscalar(action): action = [action]
             obs, reward, done, _ = env.step(action)
+            #print(steps,reward)
             rewards += reward
             steps += 1
             if done:
@@ -86,7 +86,7 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--cuda", default=False, action='store_true', help='Enable CUDA')
     parser.add_argument("-n", "--name", required=True, help="Name of the run")
-    parser.add_argument("-e", "--env", default=ENV_ID, help="Environment id, default=" + ENV_ID)
+    parser.add_argument("-e", "--env", required=True, help="Environment id")
     parser.add_argument("--lr", default=LEARNING_RATE_CRITIC, type=float, help="Critic learning rate")
     parser.add_argument("--maxkl", default=TRPO_MAX_KL, type=float, help="Maximum KL divergence")
     return parser.parse_args()
@@ -100,6 +100,7 @@ def train(test_env, args):
 
     env = gym.make(args.env)
     test_env = gym.make(args.env)
+
 
     net_act = model.ModelActor(env.observation_space.shape[0], env.action_space.shape[0]).to(device)
     net_crt = model.ModelCritic(env.observation_space.shape[0]).to(device)

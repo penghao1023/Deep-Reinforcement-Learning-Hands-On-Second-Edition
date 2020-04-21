@@ -8,13 +8,11 @@ from PIL import Image
 import numpy as np
 import torch
 
-ENV_ID = "Pendulum-v0"
-
 def parse_args():
 
     parser = argparse.ArgumentParser()
     parser.add_argument("-m", "--model", required=True, help="Model file to load")
-    parser.add_argument("-e", "--env", default=ENV_ID, help="Environment name to use, default=" + ENV_ID)
+    parser.add_argument("-e", "--env", required=True, help="Environment name to use")
     parser.add_argument("-r", "--record", help="If specified, sets the recording dir, default=Disabled")
     parser.add_argument("-s", "--save", type=int, help="If specified, save every N-th step as an image")
     parser.add_argument("--render", default=False, action='store_true', help="Render")

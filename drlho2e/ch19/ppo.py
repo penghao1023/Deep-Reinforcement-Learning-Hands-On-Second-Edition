@@ -14,7 +14,6 @@ import torch
 import torch.optim as optim
 import torch.nn.functional as F
 
-ENV_ID = "Pendulum-v0"
 GAMMA = 0.99
 GAE_LAMBDA = 0.95
 
@@ -89,7 +88,7 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--cuda", default=False, action='store_true', help='Enable CUDA')
     parser.add_argument("-n", "--name", required=True, help="Name of the run")
-    parser.add_argument("-e", "--env", default=ENV_ID, help="Environment id, default=" + ENV_ID)
+    parser.add_argument("-e", "--env", required=True, help="Environment id")
     parser.add_argument("--lrc", default=LEARNING_RATE_CRITIC, type=float, help="Critic learning rate")
     parser.add_argument("--lra", default=LEARNING_RATE_ACTOR, type=float, help="Actor learning rate")
     return parser.parse_args()
